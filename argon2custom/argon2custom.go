@@ -1,4 +1,4 @@
-package argon2hash
+package argon2custom
 
 import (
 	"crypto/rand"
