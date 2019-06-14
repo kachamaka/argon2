@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/kachamaka/argon2/argon2hash"
+	"github.com/kachamaka/argon2hash/argon2hash"
 )
 
 func main() {
