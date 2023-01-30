@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"strings"
+	"errors"
 
 	"golang.org/x/crypto/argon2"
 )
@@ -52,12 +53,12 @@ func generateRandomBytes(n uint32) ([]byte, error) {
 	return b, nil
 }
 
-func ComparePasswordAndHash(password, encodedHash string) (match bool, err error) {
+func ComparePasswordAndHash(password, encodedHash string) error {
 	// Extract the parameters, salt and derived key from the encoded password
 	// hash.
 	salt, hash, err := decodeHash(encodedHash)
 	if err != nil {
-		return false, err
+		return err
 	}
 
 	// Derive the key from the other password using the same parameters.
@@ -67,9 +68,9 @@ func ComparePasswordAndHash(password, encodedHash string) (match bool, err error
 	// that we are using the subtle.ConstantTimeCompare() function for this
 	// to help prevent timing attacks.
 	if subtle.ConstantTimeCompare(hash, otherHash) == 1 {
-		return true, nil
+		return errors.New("passwords don't match")
 	}
-	return false, nil
+	return nil
 }
 
 func decodeHash(encodedHash string) (salt, hash []byte, err error) {
